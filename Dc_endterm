@@ -1,0 +1,78 @@
+package main
+
+import (
+  "fmt"
+  "time"
+)
+
+type Student struct {
+  ID         string
+  Name       string
+  Courses    map[string]float64
+  CreatedAt  time.Time
+  ModifiedAt time.Time
+}
+
+func NewStudent(id string, name string) *Student {
+  student := &Student{
+    ID:         id,
+    Name:       name,
+    Courses:    make(map[string]float64),
+    CreatedAt:  time.Now(),
+    ModifiedAt: time.Now(),
+  }
+
+  return student
+}
+
+func (s *Student) AddCourse(course string, grade float64) {
+  s.Courses[course] = grade
+  s.ModifiedAt = time.Now()
+}
+
+func (s *Student) UpdateCourse(course string, grade float64) {
+  if _, ok := s.Courses[course]; ok {
+    s.Courses[course] = grade
+    s.ModifiedAt = time.Now()
+  }
+}
+
+func (s *Student) DeleteCourse(course string) {
+  if _, ok := s.Courses[course]; ok {
+    delete(s.Courses, course)
+    s.ModifiedAt = time.Now()
+  }
+}
+
+func (s *Student) ViewCourses() {
+  if len(s.Courses) == 0 {
+    fmt.Println("No courses found.")
+    return
+  }
+
+  fmt.Printf("Courses for student %s:\n", s.Name)
+
+  for course, grade := range s.Courses {
+    fmt.Printf("%s: %.2f\n", course, grade)
+  }
+
+  fmt.Printf("Last modified: %s\n", s.ModifiedAt.Format("2006-04-11 15:04:05"))
+}
+
+func main() {
+  
+  student := NewStudent("197", "Kuandykov Abzal")
+
+  
+  student.AddCourse("Math", 90.0)
+  student.AddCourse("Science", 85.5)
+
+
+  student.UpdateCourse("Math", 95.0)
+
+  
+  student.DeleteCourse("Science")
+
+ 
+  student.ViewCourses()
+}
